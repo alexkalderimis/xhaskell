@@ -36,7 +36,9 @@ singleton' = singleton
 flat' = Graph x [Graph "root" (map leaf ["a", "b", "c"])]
 nested' = Graph x [Graph "level-3" [Graph "level-2" [Graph "level-1" [Graph "level-0" []]]]]
 kids' = Graph x [Graph "kid-0" [], Graph "kid-1" [], Graph "root" []]
-cousins' = Graph x [Graph "parent" [Graph "sibling-0" [],
+cousins' = Graph x [leaf "kid-a",
+                    leaf "kid-b",
+                    Graph "parent" [Graph "sibling-0" [],
                                    Graph "sibling-1" [],
                                    Graph "grandparent" [
                                                         Graph "uncle" [Graph "cousin-0" [],
@@ -58,4 +60,4 @@ reparentingTests = do
 
 tracePathTest :: Test
 tracePathTest = testCase "Can trace a path from x -> cousin" $ expectedPath @=? (tracePathBetween x "cousin-1" cousins)
-    where expectedPath = ["x", "parent", "grandparent", "uncle", "cousin-1"]
+    where expectedPath = Just ["x", "parent", "grandparent", "uncle", "cousin-1"]
